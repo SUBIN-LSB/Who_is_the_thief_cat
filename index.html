@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+<!--    <link rel="stylesheet" href="move.css">-->
+    <style>
+        * {
+            margin:0;
+            padding:0;
+        }
+
+        /* 메인화면 CSS */
+        .logo {
+            width: 906px;
+            height: 549px;
+            margin: 0 auto;
+            top: 20px;
+            position: relative;
+            background-image: url("img/로고.png");
+        }
+
+        ul {
+            position: relative;
+            top: 100px;
+            list-style: none;
+        }
+        .li1 {
+            width: 338px;
+            height: 102px;
+            background-image: url("img/처음시작버튼.png");
+            margin: 0 auto;
+        }
+        .li2 {
+            width: 338px;
+            height: 102px;
+            background-image: url("img/이어하기버튼.png");
+            margin: 0 auto;
+        }
+
+        /* 맵 이동에 관한 CSS */
+        .section{
+            display: none;
+        }
+        .section.active{
+            display: block;
+            width:100%;
+            height:100vh;
+        }
+
+        /* 맵 이동 버튼 CSS */
+        .move {
+            width: 70px;
+            height: 70px;
+            background-image: url("img/확대버튼.png");
+            position: absolute;
+            top: 45rem;
+            left: 35.8rem
+        }
+        .move_top {
+            width: 70px;
+            height: 70px;
+            background-image: url("img/위버튼.png");
+            position: absolute;
+            top: 30rem;
+            left: 58.8rem;
+        }
+        .move_left {
+            width: 70px;
+            height: 70px;
+            background-image: url("img/오른쪽버튼.png");
+            position: absolute;
+            top: 30rem;
+            right: 0;
+        }
+        .move_right {
+            width: 70px;
+            height: 70px;
+            background-image: url("img/왼쪽버튼.png");
+            position: absolute;
+            top: 30rem;
+        }
+        .move_down {
+            width: 70px;
+            height: 70px;
+            background-image: url("img/아래버튼.png");
+            position: absolute;
+            top: 54rem;
+            left: 57.8rem;
+        }
+        .back {
+            width: 70px;
+            height: 70px;
+            background-image: url("img/돌아가기버튼.png");
+        }
+
+        /* 맵 배경 CSS */
+        #main {
+            background-image: url("img/메인화면.png");
+        }
+        #map_1 {
+            background-image: url("img/플레이화면기본.png");
+        }
+        #map_2 {
+            background-image: url("img/플레이화면기본_확대.png");
+        }
+        #map_3 {
+            background-image: url("img/플레이화면기본의왼쪽방.png");
+        }
+        #map_4 {
+            background-image: url("img/플레이화면기본의오른쪽방.png");
+        }
+        #map_5 {
+            background-image: url("img/플레이화면기본의오른쪽방_확대.png");
+        }
+
+        /* 상호작용 가능한 모든 캐릭터 버튼에 관한 CSS */
+        .oder {
+            margin: 0 auto;
+        }
+        .characterBtn {
+            border: none;
+            background-color: rgba(236, 241, 239, 0);
+        }
+        .character1 {
+            width: 400px;
+            height: 654px;
+            background-image: url("img/용의자1기본.png");
+            position: absolute;
+            left: 5rem;
+            top: 18.92rem;
+        }
+        .character2 {
+            width: 364px;
+            height: 699px;
+            background-image: url("img/용의자2기본.png");
+            position: absolute;
+            left: 34.2rem;
+            top: 16.1rem;
+        }
+        .character3 {
+            width: 421px;
+            height: 750px;
+            background-image: url("img/용의자3기본.png");
+            position: absolute;
+            left: 65rem;
+            top: 12.92rem;
+        }
+        .character4 {
+            width: 329px;
+            height: 731px;
+            background-image: url("img/용의자4기본.png");
+            position: absolute;
+            left: 92rem;
+            top: 14.1rem;
+        }
+        .character5 {
+            width: 274px;
+            height: 515px;
+            background-image: url("img/피해자기본.png");
+            position: absolute;
+            left: 22rem;
+            top: 27.6rem;
+        }
+        .character6 {
+            width: 325px;
+            height: 687px;
+            background-image: url("img/경찰기본.png");
+            position: absolute;
+            left: 80rem;
+            top: 16.9rem;
+        }
+
+        /* 힌트에 관한 CSS */
+        .hint {
+            display: none;
+        }
+        .hint.active {
+            display: block;
+        }
+        .hint1 {
+            width: 253px;
+            height: 420px;
+            background-image: url("img/용의자1힌트1.png");
+            position: absolute;
+            left: 733px;
+            top: 71px;
+        }
+        .hint2 {
+            width: 253px;
+            height: 420px;
+            background-image: url("img/용의자2힌트1.png");
+            position: absolute;
+            left: 88px;
+            top: 93px;
+        }
+        .hint3 {
+            width: 253px;
+            height: 420px;
+            background-image: url("img/용의자3힌트1.png");
+            position: absolute;
+            left: 346px;
+            top: 301px;
+        }
+        .hint4 {
+            width: 253px;
+            height: 442px;
+            background-image: url("img/용의자4힌트1.png");
+            position: absolute;
+            left: 985px;
+            top: 379px;
+        }
+        .hint5 {
+            width: 248px;
+            height: 395px;
+            background-image: url("img/피해자힌트1.png");
+            position: absolute;
+            left: 615px;
+            top: 491px;
+        }
+        .hint6 {
+            width: 349px;
+            height: 268px;
+            background-image: url("img/경찰힌트1.png");
+            position: absolute;
+            left: 1270px;
+            top: 531px;
+        }
+        .not {
+            position: absolute;
+            width: 330px;
+            height: 310px;
+            background-image: url("img/설명.png");
+            left: 1450px;
+            top: 203px;
+        }
+
+        /* 대화 창에 관한 CSS */
+        .dialogueContainer {
+            display: none;
+            position: fixed;
+            border-radius: 15px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            width: 100%;
+            max-width: 80%;
+            background-color: rgba(220, 215, 215, 0.85);
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .dialogueBox {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            z-index: 1000;
+            position: relative;
+        }
+        .controls {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .nextBtn {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 800;
+        }
+        .dialogueBackground {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: 900;
+            display: none;
+        }
+
+        /* 정답 맞추기 위한 버튼 CSS */
+        .fine {
+            background-image: url("img/히든버튼.png");
+            width: 70px;
+            height: 70px;
+            position: absolute;
+            right: 24rem;
+            top: 25rem;
+            display: none;
+        }
+        .fine.active{
+            display: block;
+        }
+
+        /* 정답 맞추기 위한 모달창 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            text-align: center;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: rgba(220, 215, 215, 0.85);
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 500px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 6px 20px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        .modal-content h2 {
+            margin: 20px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-button {
+            display: block;
+            width: 70%;
+            height: 60px;
+            padding: 10px;
+            margin: 10px 75px;
+            font-size: 18px;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .modal-button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<div class="section active" id="main">
+    <div class="logo"></div>
+    <ul>
+        <li class="li1"></li>
+        <li class="li2"></li>
+    </ul>
+</div>
+
+<div class="dialogueContainer">
+
+    <div class="dialogueBox"></div>
+    <div class="controls">
+
+        <button class="nextBtn" disabled>Next</button>
+    </div>
+
+</div>
+
+<div class="dialogueBackground"></div>
+
+<div class="overlay"></div>
+
+<div class="section" id="map_1">
+    <div class="back"></div>
+
+    <div class="move_top"></div>
+    <div class="move_left"></div>
+    <div class="move_right"></div>
+</div>
+
+<div class="section" id="map_2">
+    <div class="move_down"></div>
+
+    <div class="oder">
+        <button class="characterBtn character1" onclick="selectCharacter(1)"></button>
+        <button class="characterBtn character2" onclick="selectCharacter(2)"></button>
+        <button class="characterBtn character3" onclick="selectCharacter(3)"></button>
+        <button class="characterBtn character4" onclick="selectCharacter(4)"></button>
+    </div>
+
+</div>
+
+<div class="section" id="map_3">
+    <div class="back"></div>
+
+    <div class="move_left"></div>
+    <div class="move_right"></div>
+
+    <div class="oder">
+        <button class="characterBtn character5" onclick="selectCharacter(5)"></button>
+        <button class="characterBtn character6" onclick="selectCharacter(6)"></button>
+    </div>
+
+</div>
+
+<div class="section" id="map_4">
+    <div class="back"></div>
+
+    <div class="move"></div>
+    <div class="move_left"></div>
+    <div class="move_right"></div>
+
+    <div class="fine"></div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>범인은 누굴까?</h2>
+            <button class="modal-button correct"> 나비 </button>
+            <button class="modal-button incorrect"> 루비 </button>
+            <button class="modal-button incorrect"> 머드 </button>
+            <button class="modal-button incorrect"> 주드 </button>
+        </div>
+    </div>
+
+    <!-- 정답 모달 창 HTML 코드 -->
+    <div id="correctModal" class="modal">
+        <div class="modal-content">
+            <h2>범인을 잡았습니다!</h2>
+            <button id="retry1" class="modal-button retry">다시해보기</button>
+            <button id="quit1" class="modal-button quit">그만하기</button>
+        </div>
+    </div>
+
+    <!-- 오답 모달 창 HTML 코드 -->
+    <div id="incorrectModal" class="modal">
+        <div class="modal-content">
+            <h2>범인을 못 잡았습니다...</h2>
+            <button id="retry2" class="modal-button retry">다시해보기</button>
+            <button id="quit2" class="modal-button quit">그만하기</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="section" id="map_5">
+    <div class="move_down"></div>
+
+    <div class="hint hint1"></div>
+    <div class="hint hint2"></div>
+    <div class="hint hint3"></div>
+    <div class="hint hint4"></div>
+    <div class="hint hint5"></div>
+    <div class="hint hint6"></div>
+
+    <div class="not"></div>
+</div>
+
+<!--페이지 이동을 위해 따로 만든 스크립트 파일-->
+<script src="game_start_save_move.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
+
+<script>
+    $( () => {//jQuery 플러그인 draggable 사용했습니다.
+        $('.hint1, .hint2, .hint3, .hint4, .hint5, .hint6').draggable();
+    })
+
+    // 배열을 사용해 캐릭터 대사 구현
+    const dialogueArray1 = [
+        {title: '', desc: '', background: 'img/용의자1대사없음1.png'},
+        {title: '　', desc: '나비씨, 그날 뭘 하고 계셨는지 묻고 싶은데요!', background: 'img/용의자1플레이어대사1.png'},
+        {title: '용의자1 나비', desc: '자, 하고싶은 말을 해줄까? 일단 내가 훔친건 아무것도 없어, 그게 답이 될까?', background: 'img/용의자1대사1.png'},
+        {title: '용의자1 나비', desc: '왜 내가 이런 취조를 받고 있어야하는건지 모르겠어, 난 어제부터 한끼도 먹지 못해 배가 고프다고!', background: 'img/용의자1대사1.png'},
+        {title: '　', desc: '흠... 배가 고프다고요? 그게 전부인가요?', background: 'img/용의자1플레이어대사2.png'},
+        {title: '용의자1 나비', desc: '참.. 그래, 그러고보니까 저 세번째 저녀석은 먹보녀석 아닌가? 앞치마도 하고있는것이... 그녀석이 범인일지도 모르지', background: 'img/용의자1대사2.png'},
+        {title: '', desc: '', background: 'img/용의자1대사없음2.png'}
+    ]
+    const dialogueArray2 = [
+        {title: '', desc: '', background: 'img/용의자2대사없음1.png'},
+        {title: '용의자2 루비', desc: '먼저 말해도 되나요? 일단 저는 아니에요, 그날 저녁 저는 집에서 와인 한잔을 하고 있을때였어요. 증거도 있죠...', background: 'img/용의자2대사1.png'},
+        {title: '용의자2 루비', desc: '제 옆의 주드와 저는 함께 였어요. 전화를 하고 있었죠. 저는 제 집 실내에 있었어요.', background: 'img/용의자2대사1.png'},
+        {title: '　', desc: '주드씨 옆에서 전화를 하고 계셨던건가요?', background: 'img/용의자2플레이어대사1.png'},
+        {title: '용의자2 루비', desc: '아뇨, 주드와 전화를 하고 있었어요. 주드는 밖에 있었단 소리예요. 그는 전화를 하며 저를 보러 오는 중이었어요. 하지만 그가 저의 집에 거의 다 왔을때, 비명소리가 들렸죠.', background: 'img/용의자2대사3.png'},
+        {title: '용의자2 루비', desc: '제 집의 윗층에서 나는 소리였죠. 그게 전부예요. 전 사실을 말하고 있답니다.', background: 'img/용의자2대사2.png'},
+        {title: '　', desc: '흠... 알겠습니다.', background: 'img/용의자2플레이어대사2.png'},
+        {title: '', desc: '', background: 'img/용의자2대사없음2.png'}
+    ]
+    const dialogueArray3 = [
+        {title: '', desc: '', background: 'img/용의자3대사없음1.png'},
+        {title: '　', desc: '머드씨, 하실 말씀이 있으신가요? 그날 뭘 하고 계셨나요?', background: 'img/용의자3플레이어대사1.png'},
+        {title: '용의자3 머드', desc: '그날.. 난 밥을 먹고있었어, 냉장고를 열고... 그래.. 고기를..', background: 'img/용의자3대사1.png'},
+        {title: '　', desc: '방금 고기라고 하셨나요?', background: 'img/용의자3플레이어대사2.png'},
+        {title: '용의자3 머드', desc: '응.. 하지만 그건 내가 오전에 잡았던 물고기를 손질해 넣어놓은거였어.. 나는 다른이의 냉장고에서 음식을 훔치지 않아..', background: 'img/용의자3대사2.png'},
+        {title: '용의자3 머드', desc: '보시다시피 난 1층에서 수산시장을 하고 있다고.. 난 물고기가 아니면 먹지 않지...', background: 'img/용의자3대사1.png'},
+        {title: '용의자3 머드', desc: '그래서 그날도 정말 물고기를 먹고있었어, 정말이야. 내가 할 수 있는 말은 그것 뿐이야..', background: 'img/용의자3대사1.png'},
+        {title: '', desc: '', background: 'img/용의자3대사없음2.png'}
+    ]
+    const dialogueArray4 = [
+        {title: '', desc: '', background: 'img/용의자4대사없음1.png'},
+        {title: '　', desc: '주드씨, 한 가지만 묻죠, 그날 뭘 하고 계셨나요?', background: 'img/용의자4플레이어대사1.png'},
+        {title: '용의자4 주드', desc: '나는 그날 밖에 있었어. 그 망할 포섬의 집 근처도 아니었다고,', background: 'img/용의자4대사1.png'},
+        {title: '용의자4 주드', desc: '그 밑집에 사는 루비를 보기 위해 가는 도중이었지, 하지만 내가 거의 도착했을 땐 불길한 비명소리가 들렸고 말이야.', background: 'img/용의자4대사1.png'},
+        {title: '　', desc: '지이씨의 비명소리였나요..?', background: 'img/용의자4플레이어대사2.png'},
+        {title: '용의자4 주드', desc: '그래 그렇지... 그 포섬의 비명소리와 함께 창문에서 저 흰 털을 가진 고양이가 내려왔어. 3층 정도면 아무것도 아니란 거지.', background: 'img/용의자4대사1.png'},
+        {title: '', desc: '', background: 'img/용의자4대사없음2.png'}
+    ]
+    const dialogueArray5 = [
+        {title: '', desc: '', background: 'img/피해자대사없음1.png'},
+        {title: '　', desc: '지이씨라고 했죠?! 먼길 와주셔서 감사해요!', background: 'img/피해자플레이어대사1.png'},
+        {title: '　', desc: '자, 바로 본론으로 넘어가자면, 범인에 대해 생각나는거라도 있으세요?', background: 'img/피해자플레이어대사2.png'},
+        {title: '피해자 지이', desc: '이, 이렇게... 갑자기요? 아직 주, 준비가..', background: 'img/피해자대사1.png'},
+        {title: '피해자 지이', desc: '... 아니지.. 죄송해요.. 근데 자세히 기억나는 건 없어요... 그, 그래도 괜찮으시다면..', background: 'img/피해자대사2.png'},
+        {title: '피해자 지이', desc: '시간은 늦은 저녁이었어요.. 제가 집에 들어온지 얼마 되지 않았을때 사건이 일어났죠..', background: 'img/피해자대사2.png'},
+        {title: '피해자 지이', desc: '부스럭 거리는 소리와 함께 부얶에서 소리가 들렸고 저는 긴장할 수 밖에 없었죠...', background: 'img/피해자대사3.png'},
+        {title: '　', desc: '범인이었나요?!', background: 'img/피해자플레이어대사2.png'},
+        {title: '피해자 지이', desc: '바닥에 밝은색 털이 보였어요!', background: 'img/피해자대사4.png'},
+        {title: '　', desc: '아아... 범인이 아니었군요...', background: 'img/피해자플레이어대사3.png'},
+        {title: '피해자 지이', desc: '아...!! 범, 범인은... 잘 보지 못했어요... 냉장고의 문이 열려있었고', background: 'img/피해자대사5.png'},
+        {title: '피해자 지이', desc: '냉장고의 빛 때문에 털색이 더 바, 밝아보였을지도.. 모르고요...', background: 'img/피해자대사5.png'},
+        {title: '피해자 지이', desc: '그리고 제가 온 것을 확인한 범인은 그 자리에서 창문을 타고 도망쳤어요...', background: 'img/피해자대사5.png'},
+        {title: '　', desc: '그러면 그 밝은 털색을 제외하면 다른 건 확인하지 못했단 소리인거죠? 하지만 그 털색도 엄청 확실하진 않고요?', background: 'img/피해자플레이어대사4.png'},
+        {title: '피해자 지이', desc: '아.. 네, 네... 아쉽게도요.. 제가 누, 눈이 안 좋아서... 죄송합니다..', background: 'img/피해자대사3.png'},
+        {title: '　', desc: '하하! 아니에요, 제법 유용한 증거였어요!', background: 'img/피해자플레이어대사5.png'},
+        {title: '', desc: '', background: 'img/피해자대사없음2.png'}
+    ]
+    const dialogueArray6 = [
+        {title: '', desc: '', background: 'img/경찰대사없음1.png'},
+        {title: '　', desc: '제 수사에 협죠해주셔서 감사합니다 가디!', background: 'img/경찰플레이어대사1.png'},
+        {title: '경찰견 가디', desc: '별말씀을요, 그날의 기억은 정말 생생하니 말입니다. 지이양이 불러서 왔을때는 이미 범인은 도망간 이후였지만요..', background: 'img/경찰대사1.png'},
+        {title: '경찰견 가디', desc: '지이양은 늦은 저녁 귀가 후 자신의 냉장고를 털던 범인을 봤어요. 하지만 그의 생김새는 제대로 확인하지 못했죠.', background: 'img/경찰대사1.png'},
+        {title: '경찰견 가디', desc: '하지만 냉장고에 사라진 음식 같은 건 없었죠, 범인은 육식동물이예요. 지이양은 고기를 절대 먹지 않죠.', background: 'img/경찰대사1.png'},
+        {title: '경찰견 가디', desc: '범인은 그걸 알지 못했어요, 그리고 지이양이 집에 도착했을 때, 창문을 통해 도망갔죠.', background: 'img/경찰대사2.png'},
+        {title: '경찰견 가디', desc: '아무런 보조장비도 없이 창문 밖으로 뛰어들 수 있는 육식동물은 고양이를 제외하면 찾기 힘들죠.', background: 'img/경찰대사2.png'},
+        {title: '경찰견 가디', desc: '그리고 그가 남긴 밝은색의 털도 범인이 고양이임을 알려주고있죠, 범인은 밥을 먹지못해 배가 아주 많이 고플거예요 분명.', background: 'img/경찰대사1.png'},
+        {title: '　', desc: '역시 경찰견은 예리하군요... 가디 당신이 있어 다행이에요!', background: 'img/경찰플레이어대사2.png'},
+        {title: '', desc: '', background: 'img/경찰대사없음2.png'}
+    ]
+
+    let currentDialogueArray = [];
+    let currentDialogueIndex = 0;
+
+    // 대사창 구현을 위해 함수 선언
+    const dialogueBox = document.querySelector('.dialogueBox');
+    const nextBtn = document.querySelector('.nextBtn');
+    const dialogueContainer = document.querySelector('.dialogueContainer');
+    const dialogueBackground = document.querySelector('.dialogueBackground');
+    const overlay = document.querySelector('.overlay');
+
+    function selectCharacter(characterNumber) {
+        // 캐릭터 버튼에 맞는 내용들을 표시하며 addClass 를 사용해 숨겨진 힌트들을 볼 수 있게 하기
+        if (characterNumber === 1) {
+            currentDialogueArray = dialogueArray1;
+            $('.hint1').addClass('active');
+        } else if (characterNumber === 2) {
+            currentDialogueArray = dialogueArray2;
+            $('.hint2').addClass('active');
+        } else if (characterNumber === 3) {
+            currentDialogueArray = dialogueArray3;
+            $('.hint3').addClass('active');
+        } else if (characterNumber === 4) {
+            currentDialogueArray = dialogueArray4;
+            $('.hint4').addClass('active');
+        } else if (characterNumber === 5) {
+            currentDialogueArray = dialogueArray5;
+            $('.hint5').addClass('active');
+        } else if (characterNumber === 6) {
+            currentDialogueArray = dialogueArray6;
+            $('.hint6').addClass('active');
+        }
+        currentDialogueIndex = 0;
+        nextBtn.disabled = false;
+        dialogueContainer.style.display = 'block'; // 대화창 표시
+        dialogueBackground.style.display= 'block'; // 대화배경 표시
+        overlay.style.display = 'block'; // 오버레이 표시
+        showDialogue(currentDialogueIndex);
+    }
+
+    function showDialogue(index) {
+        if (index < currentDialogueArray.length) {
+            const dialogue = currentDialogueArray[index];
+            dialogueBox.innerHTML =
+                `<h3 style="margin: 20px 90px 20px 20px; font-size: 25px; text-align: right">${dialogue.title}</h3>
+                    <p style="margin: 20px; font-size: 18px; text-align: center">${dialogue.desc}</p>`;
+
+            dialogueBackground.style.backgroundImage = `url(${dialogue.background})`; //대화 배경 표시부분
+
+            // 빈 대화 항목에 넣을 부분
+            if (dialogue.title === '' && dialogue.desc === '') {
+                dialogueBox.innerHTML = `<p style="margin: 20px; font-size: 18px; text-align: center">...</p>`;
+            }
+            checkHints();
+        } else {
+            nextBtn.disabled = true; // 더 이상 대화가 없으면 버튼 비활성화 합니다
+            setTimeout(() => {
+                dialogueContainer.style.display = 'none'; // 대화 끝나면 대화창 숨김
+                dialogueBackground.style.display = 'none'; // 대화배경 숨김
+                overlay.style.display = 'none'; // 오버레이 숨김
+            }, 1000); // 1초 후에 숨김
+        }
+    }
+    nextBtn.addEventListener('click', () => {
+        currentDialogueIndex++;
+        showDialogue(currentDialogueIndex);
+    });
+    function checkHints() {
+        if ($('.hint').length === $('.hint.active').length) {
+            $('.fine').addClass('active');
+        }
+    }
+    document.querySelector('.fine').addEventListener('click', function() {
+        document.getElementById('modal').style.display = 'block';
+    });
+
+    // 모달 창의 닫기 버튼(close)을 클릭했을 때 모달 창을 숨기는 기능 추가
+    document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('modal').style.display = 'none';
+    });
+
+    // 정답인 버튼을 클릭했을 때의 동작
+    document.querySelector('.correct').addEventListener('click', function() {
+        document.getElementById('modal').style.display = 'none'; // 기존 모달 숨기기
+        document.getElementById('correctModal').style.display = 'block'; // 정답 모달 보이기
+    });
+
+    // 오답인 버튼들을 클릭했을 때의 동작
+    document.querySelectorAll('.incorrect').forEach(itm => {
+        itm.addEventListener('click', function() {
+            document.getElementById('modal').style.display = 'none'; // 기존 모달 숨기기
+            document.getElementById('incorrectModal').style.display = 'block'; // 오답 모달 보이기
+        });
+    });
+
+    // 정답의 다시하기 버튼을 클릭했을 때의 동작
+    document.getElementById('retry1').addEventListener('click', function() {
+        location.reload(); // 페이지 새로고침
+        window.location.href = '#map_1'; // #map_1로 이동
+    });
+
+
+    // 오답의 다시하기 버튼을 클릭했을 때의 동작
+    document.getElementById('retry2').addEventListener('click', function() {
+        location.reload(); // 페이지 새로고침
+        window.location.href = '#map_1'; // #map_1로 이동
+    });
+
+
+
+</script>
+</body>
+</html>
